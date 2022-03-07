@@ -21,11 +21,11 @@ stages:
           targetPath: '$(System.DefaultWorkingDirectory)/tf-manifests'
           artifact: 'terraform-manifests-out'
           publishLocation: 'pipeline'
-      - task: TerraformInstaller@
+      - task: TerraformInstaller@0
         displayName: Terraform Install
         inputs:
           terrafromVersion: 'latest'
-      - task: TerraformCLI@
+      - task: TerraformCLI@0
         displayName: Terraform Init
         inputs:
           command: 'init'
