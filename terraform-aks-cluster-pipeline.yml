@@ -32,6 +32,7 @@ stages:
           workingDirectory: '$(System.DefaultWorkingDirectory)/tf-manifests'
           backendType: 'azurerm'
           backendServiceArm: 'terraform-aks-azurerm-svc-con'
+          ensureBackend: true
           backendAzureRmResourceGroupName: 'terraform-aks-test'
           backendAzureRmStorageAccountName: 'terraformstatexlrwdrzs'
           backendAzureRmContainerName: 'tfstatefiles'
