@@ -84,7 +84,7 @@ stages:
               backendAzureRmResourceGroupName: 'tf-storage-rg'
               backendAzureRmResourceGroupLocation: 'West Europe'
               backendAzureRmStorageAccountName: 'terraformstore1203'
-              backendAzureRmContainerName: 'tfstatefiles'
+              backendAzureRmContainerName: 'terraformstates'
               backendAzureRmKey: 'aks-$(TEST_ENVIRONMENT).tfstate'
               allowTelemetryCollection: false
           - task: TerraformCLI@0
