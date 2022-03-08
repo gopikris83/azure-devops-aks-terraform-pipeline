@@ -78,13 +78,14 @@ stages:
             displayName: Terraform Init
             inputs:
               command: 'init'
+              workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
               backendType: 'azurerm'
               backendServiceArm: 'terraform-aks-azurerm-svc-con'
               ensureBackend: true
               backendAzureRmResourceGroupName: 'tf-storage-rg'
               backendAzureRmResourceGroupLocation: 'West Europe'
               backendAzureRmStorageAccountName: 'terraformstore1203'
-              backendAzureRmContainerName: 'terraformstates'
+              backendAzureRmContainerName: 'tfstatefiles'
               backendAzureRmKey: 'aks-$(TEST_ENVIRONMENT).tfstate'
               allowTelemetryCollection: false
           - task: TerraformCLI@0
