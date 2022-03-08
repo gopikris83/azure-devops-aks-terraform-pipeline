@@ -33,7 +33,7 @@ stages:
           backendType: 'azurerm'
           backendServiceArm: 'terraform-aks-azurerm-svc-con'
           ensureBackend: true
-          backendAzureRmResourceGroupName: 'terraform-storage-rg'
+          backendAzureRmResourceGroupName: 'tf-storage-rg'
           backendAzureRmResourceGroupLocation: 'West Europe'
           backendAzureRmStorageAccountName: 'tfaksstorage2022'
           backendAzureRmContainerName: 'tfstatefiles'
