@@ -31,5 +31,5 @@ variable "win_admin_username" {
 
 variable "win_admin_password" {
   type    = string
-  default = "P@ssw0rd1234"
+  default = "P@ssw0rd19800402"
 }
