@@ -33,15 +33,15 @@ stages:
           backendType: 'azurerm'
           backendServiceArm: 'terraform-aks-azurerm-svc-con'
           ensureBackend: true
-          backendAzureRmResourceGroupName: 'terraform-storage-rg'
+          backendAzureRmResourceGroupName: 'tf-storage-rg'
           backendAzureRmResourceGroupLocation: 'West Europe'
-          backendAzureRmStorageAccountName: 'tfaksstorage1202'
+          backendAzureRmStorageAccountName: 'terraformstore1203'
           backendAzureRmContainerName: 'tfstatefiles'
-          backendAzureRmKey: 'aks-base.tfstate'
+          backendAzureRmKey: 'aks-state.tfstate'
           allowTelemetryCollection: false
       - task: TerraformCLI@0
         displayName: Terraform Validate
         inputs:
           command: 'validate'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-manifests'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/tf-manifests'
           allowTelemetryCollection: false
