@@ -90,14 +90,14 @@ stages:
           - task: TerraformCLI@0
             inputs:
               command: 'plan'
-              workingDirectory: $(System.DefaultWorkingDirectory)/terraform-manifests-out
+              workingDirectory: $(System.DefaultWorkingDirectory)/tf-manifests
               environmentServiceName: 'terraform-aks-azurerm-svc-con'
               commandOptions: '-var ssh_pub_key=$(sshkey.secureFilePath) -var environment=$(TEST_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
               allowTelemetryCollection: false
           - task: TerraformCLI@0
             inputs:
               command: 'apply'
-              workingDirectory: $(System.DefaultWorkingDirectory)/terraform-manifests-out
+              workingDirectory: $(System.DefaultWorkingDirectory)/tf-manifests
               environmentServiceName: 'terraform-aks-azurerm-svc-con'
               commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
               allowTelemetryCollection: false
