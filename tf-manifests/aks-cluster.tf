@@ -15,7 +15,7 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
     vm_size              = "Standard_D2_v2"
     orchestrator_version = data.azurerm_kubernetes_service_versions.current.latest_version
     availability_zones   = [1, 2, 3]
-    enable_auto_scaling   = true
+    enable_auto_scaling  = true
     max_count            = 3
     min_count            = 1
     os_disk_size_gb      = 20
@@ -40,8 +40,8 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
   addon_profile {
     azure_policy { enabled = true }
     oms_agent {
-      enabled                 = true
-      log_analytics_workspace = azurerm_log_analytics_workspace.logs_insights.id
+      enabled                    = true
+      log_analytics_workspace_id = azurerm_log_analytics_workspace.logs_insights.id
     }
   }
 
