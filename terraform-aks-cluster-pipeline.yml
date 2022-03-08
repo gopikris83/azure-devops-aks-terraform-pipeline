@@ -74,19 +74,19 @@ stages:
             name: sshkey
             inputs:
               secureFile: 'akspubkey.pub'
-          - task: TerraformCLI@0
-            displayName: Terraform Init
-            inputs:
-              command: 'init'
-              backendType: 'azurerm'
-              backendServiceArm: 'terraform-aks-azurerm-svc-con'
-              ensureBackend: true
-              backendAzureRmResourceGroupName: 'tf-storage-rg'
-              backendAzureRmResourceGroupLocation: 'West Europe'
-              backendAzureRmStorageAccountName: 'terraformstore1203'
-              backendAzureRmContainerName: 'tfstatefiles'
-              backendAzureRmKey: 'aks-state.tfstate'
-              allowTelemetryCollection: false
+#          - task: TerraformCLI@0
+#            displayName: Terraform Init
+#            inputs:
+#              command: 'init'
+#              backendType: 'azurerm'
+#              backendServiceArm: 'terraform-aks-azurerm-svc-con'
+#              ensureBackend: true
+#              backendAzureRmResourceGroupName: 'tf-storage-rg'
+#              backendAzureRmResourceGroupLocation: 'West Europe'
+#              backendAzureRmStorageAccountName: 'terraformstore1203'
+#              backendAzureRmContainerName: 'tfstatefiles'
+#              backendAzureRmKey: 'aks-state.tfstate'
+#              allowTelemetryCollection: false
           - task: TerraformCLI@0
             inputs:
               command: 'plan'
