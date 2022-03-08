@@ -2,7 +2,7 @@
 # AKS Cluster resources
 ##########################################################
 
-resource "azure_kubernetes_cluster" "aks_cluster" {
+resource "azurerm_kubernetes_cluster" "aks_cluster" {
   dns_prefix          = azurerm_resource_group.aks_rg.name
   name                = "${var.resource_group_name}-aks-cluster"
   location            = azurerm_resource_group.aks_rg.location
