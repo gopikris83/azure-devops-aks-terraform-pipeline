@@ -35,7 +35,7 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
   }
 
   # Identity either SystemAssigned or UserAssigned
-  identity { type = "SystemAssigned" }
+  #identity { type = "SystemAssigned" }
 
   addon_profile {
     azure_policy { enabled = true }
