@@ -15,7 +15,12 @@ terraform {
       version = "~> 2.0"
     }
   }
-  backend "azurerm" {}
+  backend "azurerm" {
+    # resource_group_name  = "tf-storage-rg"
+    # storage_account_name = "akscluster110322"
+    # container_name       = "tfstate"
+    # key                  = "dev.terraform.state"
+  }
 }
 
 provider "azurerm" {

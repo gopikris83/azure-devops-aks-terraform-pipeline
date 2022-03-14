@@ -45,13 +45,7 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
     }
   }
 
-  role_based_access_control {
-    enabled = true
-    azure_active_directory {
-      managed                = true
-      admin_group_object_ids = [azuread_group.aks_admins.id]
-    }
-  }
+  role_based_access_control { enabled = true }
 
   windows_profile {
     admin_username = var.win_admin_username
@@ -68,9 +62,27 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
   network_profile {
     load_balancer_sku = "Standard"
     network_plugin    = "azure"
+    network_policy    = "calico"
   }
+
+  service_principal {
+    client_id     = var.client_app_id
+    client_secret = var.client_app_secret
+  }
+
 
   tags = {
     Environment = var.environment
   }
+}
+
+# Role Assignment for the Container registry for AKS to pull images
+resource "azurerm_role_assignment" "acrpull-role" {
+  principal_id                     = data.azurerm_client_config.example.object_id
+  scope                            = azurerm_container_registry.aks-acr.id
+  role_definition_name             = "AcrPull"
+  skip_service_principal_aad_check = false
+}
+
+data "azurerm_client_config" "example" {
 }
