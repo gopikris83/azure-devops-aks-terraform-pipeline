@@ -20,7 +20,7 @@ variable "location" {
 }
 
 variable "ssh_pub_key" {
-  #default = "~/.ssh/aks-terraform-sshkeys/akspubkey.pub"
+  default     = "~/.ssh/aks-terraform-sshkeys/akspubkey.pub"
   description = "This variable defines the SSH Public Key for Linux k8s Worker nodes"
 }
 
@@ -32,4 +32,14 @@ variable "win_admin_username" {
 variable "win_admin_password" {
   type    = string
   default = "P@ssw0rd19800402"
+}
+
+variable "client_app_id" {
+  description = "The Client app ID of the AKS client application"
+  default     = "d91d802e-d2d5-4967-b025-caaf0fad32f0"
+}
+
+variable "client_app_secret" {
+  description = "The secret created for AKS server application"
+  default     = "P-O7Q~ESXl~x8NdmR9tjaQONy1i5d3KCuMfFO"
 }
