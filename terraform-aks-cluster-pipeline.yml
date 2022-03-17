@@ -70,7 +70,7 @@ stages:
       displayName: Publish Artifact
       inputs:
         targetPath: '$(System.DefaultWorkingDirectory)/service-principal'
-        artifact: 'terraform-manifest-sp'
+        artifact: 'terraform-manifests-sp'
         publishLocation: 'pipeline'
     - task: TerraformCLI@0
       displayName: Terraform Init
@@ -90,9 +90,9 @@ stages:
       displayName: Terraform Plan
       inputs:
         command: 'plan'
-        workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-sp'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/service-principal'
         environmentServiceName: 'terraform-aks-azurerm-svc-con'
-        commandOptions: '-var environment=$(TEST_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-sp/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
+        commandOptions: '-out $(Pipeline.Workspace)/terraform-manifests-sp/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
         allowTelemetryCollection: false
     - task: TerraformCLI@0
       displayName: Terraform Apply
