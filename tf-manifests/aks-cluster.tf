@@ -77,12 +77,18 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
 }
 
 # Role Assignment for the Container registry for AKS to pull images
-resource "azurerm_role_assignment" "acrpull-role" {
-  principal_id                     = data.azurerm_client_config.example.object_id
-  scope                            = azurerm_container_registry.aks-acr.id
-  role_definition_name             = "AcrPull"
-  skip_service_principal_aad_check = false
+data "azurerm_container_registry" "data_acr" {
+  name                = "terraformaksacr"
+  resource_group_name = azurerm_resource_group.aks_rg.name
 }
 
-data "azurerm_client_config" "example" {
+data "azuread_service_principal" "akssp" {
+  display_name = "tf-aks-service-principal"
+}
+
+resource "azurerm_role_assignment" "aks_to_acr_role" {
+  principal_id                     = data.azuread_service_principal.akssp.object_id
+  scope                            = data.azurerm_container_registry.data_acr.id
+  role_definition_name             = "AcrPull"
+  skip_service_principal_aad_check = true
 }

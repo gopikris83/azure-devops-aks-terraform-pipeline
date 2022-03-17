@@ -31,5 +31,5 @@ output "aks_cluster_kubernetes_version" {
 }
 
 output "acr-role" {
-  value = azurerm_role_assignment.acrpull-role.id
+  value = azurerm_role_assignment.aks_to_acr_role.id
 }
