@@ -125,7 +125,7 @@ stages:
           inputs:
             command: 'apply'
             workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-sp'
-            environmentServiceName: 'terraform-aks-azurerm-svc-con'
+            environmentServiceName: 'tf-aks-sp-svc-con'
             commandOptions: '$(Pipeline.Workspace)/terraform-manifests-sp/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
             allowTelemetryCollection: false
 
