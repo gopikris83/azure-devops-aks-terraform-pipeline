@@ -67,6 +67,7 @@ stages:
     displayName: DeployAKSServicePrincipal
     pool:
       vmImage: 'ubuntu-latest'
+    environment: $(TEST_ENVIRONMENT)
     strategy:
      runOnce:
        deploy:
