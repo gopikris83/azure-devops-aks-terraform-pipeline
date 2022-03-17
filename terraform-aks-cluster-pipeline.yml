@@ -12,6 +12,11 @@ pool:
 variables:
 - name: TEST_ENVIRONMENT
   value: test
+- group: AKS-VariableGP
+- name: clientid
+  value: $[variables.client_app_id]
+- name: clientpwd
+  value: $[variables.client_app_secret]
 
 stages:
 - stage: TerraformValidate
@@ -118,15 +123,15 @@ stages:
               command: 'plan'
               workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
               environmentServiceName: 'terraform-aks-azurerm-svc-con'
-              commandOptions: '-var ssh_pub_key=$(sshkey.secureFilePath) -var environment=$(TEST_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
+              commandOptions: '-var ssh_pub_key=$(sshkey.secureFilePath) -var client_app_id=$(clientid) -var client_app_secret=$(clientpwd) -var environment=$(TEST_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
               allowTelemetryCollection: false
-#          - task: TerraformCLI@0
-#            inputs:
-#              command: 'apply'
-#              workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
-#              environmentServiceName: 'terraform-aks-azurerm-svc-con'
-#              commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
-#              allowTelemetryCollection: false
+          - task: TerraformCLI@0
+            inputs:
+              command: 'apply'
+              workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
+              environmentServiceName: 'terraform-aks-azurerm-svc-con'
+              commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
+              allowTelemetryCollection: false
           - task: TerraformCLI@0
             inputs:
               command: 'destroy'
