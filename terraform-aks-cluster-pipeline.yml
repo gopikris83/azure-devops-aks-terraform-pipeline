@@ -54,6 +54,26 @@ stages:
           command: 'validate'
           workingDirectory: '$(System.DefaultWorkingDirectory)/tf-manifests'
           allowTelemetryCollection: false
+      - task: PublishPipelineArtifact@1
+        displayName: Publish Artifact
+        inputs:
+          targetPath: '$(System.DefaultWorkingDirectory)/service-principal'
+          artifact: 'terraform-manifests-sp'
+          publishLocation: 'pipeline'
+      - task: TerraformCLI@0
+        displayName: Terraform Init
+        inputs:
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/service-principal'
+          backendType: 'azurerm'
+          backendServiceArm: 'terraform-aks-azurerm-svc-con'
+          ensureBackend: true
+          backendAzureRmResourceGroupName: 'azactivedirectory-rg'
+          backendAzureRmResourceGroupLocation: 'Sweden Central'
+          backendAzureRmStorageAccountName: 'azadmysql2022'
+          backendAzureRmContainerName: 'tfstate'
+          backendAzureRmKey: 'dev.terraform.state'
+          allowTelemetryCollection: false
 
 # Deploy the stages to Test environment
 # Create Service Principal
@@ -72,33 +92,13 @@ stages:
      runOnce:
        deploy:
         steps:
-        - task: PublishPipelineArtifact@1
-          displayName: Publish Artifact
-          inputs:
-            targetPath: '$(System.DefaultWorkingDirectory)/service-principal'
-            artifact: 'terraform-manifests-sp'
-            publishLocation: 'pipeline'
-        - task: TerraformCLI@0
-          displayName: Terraform Init
-          inputs:
-            command: 'init'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/service-principal'
-            backendType: 'azurerm'
-            backendServiceArm: 'terraform-aks-azurerm-svc-con'
-            ensureBackend: true
-            backendAzureRmResourceGroupName: 'azactivedirectory-rg'
-            backendAzureRmResourceGroupLocation: 'Sweden Central'
-            backendAzureRmStorageAccountName: 'azadmysql2022'
-            backendAzureRmContainerName: 'tfstate'
-            backendAzureRmKey: 'dev.terraform.state'
-            allowTelemetryCollection: false
         - task: TerraformCLI@0
           displayName: Terraform Plan
           inputs:
             command: 'plan'
             workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-sp'
             environmentServiceName: 'terraform-aks-azurerm-svc-con'
-            commandOptions: '-out $(Pipeline.Workspace)/terraform-manifests-sp/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
+            commandOptions: '-var environment=$(TEST_ENVIRONMENT)  -out $(Pipeline.Workspace)/terraform-manifests-sp/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
             allowTelemetryCollection: false
         - task: TerraformCLI@0
           displayName: Terraform Apply
