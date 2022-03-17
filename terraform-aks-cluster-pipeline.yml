@@ -74,6 +74,12 @@ stages:
           backendAzureRmContainerName: 'tfstate'
           backendAzureRmKey: 'dev.terraform.state'
           allowTelemetryCollection: false
+      - task: TerraformCLI@0
+        displayName: Terraform Validate
+        inputs:
+          command: 'validate'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/service-principal'
+          allowTelemetryCollection: false
 
 # Deploy the stages to Test environment
 # Create Service Principal
@@ -92,6 +98,20 @@ stages:
      runOnce:
        deploy:
         steps:
+        - task: TerraformCLI@0
+          displayName: Terraform Init
+          inputs:
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/service-principal'
+            backendType: 'azurerm'
+            backendServiceArm: 'terraform-aks-azurerm-svc-con'
+            ensureBackend: true
+            backendAzureRmResourceGroupName: 'azactivedirectory-rg'
+            backendAzureRmResourceGroupLocation: 'Sweden Central'
+            backendAzureRmStorageAccountName: 'azadmysql2022'
+            backendAzureRmContainerName: 'tfstate'
+            backendAzureRmKey: 'dev.terraform.state'
+            allowTelemetryCollection: false
         - task: TerraformCLI@0
           displayName: Terraform Plan
           inputs:
