@@ -57,6 +57,31 @@ stages:
 # Terraform Initialize
 # Terraform Plan for AKS Cluster preview
 # Terraform apply
+- stage: DeployAKSServicePrincipal
+  jobs:
+  - job:
+    continueOnError: false
+    steps:
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Artifact
+      inputs:
+        targetPath: '$(System.DefaultWorkingDirectory)/service-principal'
+        artifact: 'terraform-manifest-sp'
+        publishLocation: 'pipeline'
+    - task: TerraformCLI@0
+      displayName: Terraform Init
+      inputs:
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/service-principal'
+        backendType: 'azurerm'
+        backendServiceArm: 'terraform-aks-azurerm-svc-con'
+        ensureBackend: true
+        backendAzureRmResourceGroupName: 'azactivedirectory-rg'
+        backendAzureRmResourceGroupLocation: 'Sweden Central'
+        backendAzureRmStorageAccountName: 'azadmysql2022'
+        backendAzureRmContainerName: 'tfstate'
+        backendAzureRmKey: 'dev.terraform.state'
+        allowTelemetryCollection: false
 
 - stage: DeployAKSTestCluster
   jobs: 
