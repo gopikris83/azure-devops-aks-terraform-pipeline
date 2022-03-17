@@ -56,15 +56,14 @@ stages:
           allowTelemetryCollection: false
 
 # Deploy the stages to Test environment
-# Deployment to the Test AKS Cluster
+# Create Service Principal
 # Define the environment using variables
-# Download the SSH Key to access the kubernetes cluster from local
 # Terraform Initialize
-# Terraform Plan for AKS Cluster preview
+# Terraform Plan for preview
 # Terraform apply
 - stage: DeployAKSServicePrincipal
   jobs:
-  - job:
+  - job: TerraformServicePrincipalJob
     continueOnError: false
     steps:
     - task: PublishPipelineArtifact@1
@@ -87,6 +86,30 @@ stages:
         backendAzureRmContainerName: 'tfstate'
         backendAzureRmKey: 'dev.terraform.state'
         allowTelemetryCollection: false
+    - task: TerraformCLI@0
+      displayName: Terraform Plan
+      inputs:
+        command: 'plan'
+        workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-sp'
+        environmentServiceName: 'terraform-aks-azurerm-svc-con'
+        commandOptions: '-var environment=$(TEST_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-sp/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
+        allowTelemetryCollection: false
+    - task: TerraformCLI@0
+      displayName: Terraform Apply
+      inputs:
+        command: 'apply'
+        workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-sp'
+        environmentServiceName: 'terraform-aks-azurerm-svc-con'
+        commandOptions: '$(Pipeline.Workspace)/terraform-manifests-sp/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
+        allowTelemetryCollection: false
+
+# Deploy the stages to Test environment
+# Deployment to the Test AKS Cluster
+# Define the environment using variables
+# Download the SSH Key to access the kubernetes cluster from local
+# Terraform Initialize
+# Terraform Plan for AKS Cluster preview
+# Terraform apply
 
 - stage: DeployAKSTestCluster
   jobs: 
