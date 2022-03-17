@@ -102,7 +102,7 @@ stages:
           displayName: Terraform Init
           inputs:
             command: 'init'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/service-principal'
+            workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-sp'
             backendType: 'azurerm'
             backendServiceArm: 'terraform-aks-azurerm-svc-con'
             ensureBackend: true
