@@ -110,7 +110,7 @@ stages:
             backendAzureRmResourceGroupLocation: 'Sweden Central'
             backendAzureRmStorageAccountName: 'azadmysql2022'
             backendAzureRmContainerName: 'tfstate'
-            backendAzureRmKey: 'dev.terraform.state'
+            backendAzureRmKey: 'dev-$(TEST_ENVIRONMENT).state'
             allowTelemetryCollection: false
         - task: TerraformCLI@0
           displayName: Terraform Plan
