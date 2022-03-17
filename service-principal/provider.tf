@@ -11,10 +11,10 @@ terraform {
     }
   }
   backend "azurerm" {
-    resource_group_name  = "azactivedirectory-rg"
-    storage_account_name = "azadmysql2022"
-    container_name       = "tfstate"
-    key                  = "dev.terraform.state"
+    # resource_group_name  = "azactivedirectory-rg"
+    # storage_account_name = "azadmysql2022"
+    # container_name       = "tfstate"
+    # key                  = "dev.terraform.state"
   }
 }
 
