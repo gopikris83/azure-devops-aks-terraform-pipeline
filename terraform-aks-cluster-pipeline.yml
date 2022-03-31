@@ -54,6 +54,32 @@ stages:
           command: 'validate'
           workingDirectory: '$(System.DefaultWorkingDirectory)/tf-manifests'
           allowTelemetryCollection: false
+      - task: PublishPipelineArtifact@1
+        displayName: Publish Artifact
+        inputs:
+          targetPath: '$(System.DefaultWorkingDirectory)/service-principal'
+          artifact: 'terraform-manifests-sp'
+          publishLocation: 'pipeline'
+      - task: TerraformCLI@0
+        displayName: Terraform Init
+        inputs:
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/service-principal'
+          backendType: 'azurerm'
+          backendServiceArm: 'terraform-aks-azurerm-svc-con'
+          ensureBackend: true
+          backendAzureRmResourceGroupName: 'azactivedirectory-rg'
+          backendAzureRmResourceGroupLocation: 'Sweden Central'
+          backendAzureRmStorageAccountName: 'azadmysql2022'
+          backendAzureRmContainerName: 'tfstate'
+          backendAzureRmKey: 'dev.terraform.state'
+          allowTelemetryCollection: false
+      - task: TerraformCLI@0
+        displayName: Terraform Validate
+        inputs:
+          command: 'validate'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/service-principal'
+          allowTelemetryCollection: false
 
 # Deploy the stages to Test environment
 # Create Service Principal
@@ -63,45 +89,45 @@ stages:
 # Terraform apply
 - stage: DeployAKSServicePrincipal
   jobs:
-  - job: TerraformServicePrincipalJob
-    continueOnError: false
-    steps:
-    - task: PublishPipelineArtifact@1
-      displayName: Publish Artifact
-      inputs:
-        targetPath: '$(System.DefaultWorkingDirectory)/service-principal'
-        artifact: 'terraform-manifests-sp'
-        publishLocation: 'pipeline'
-    - task: TerraformCLI@0
-      displayName: Terraform Init
-      inputs:
-        command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/service-principal'
-        backendType: 'azurerm'
-        backendServiceArm: 'terraform-aks-azurerm-svc-con'
-        ensureBackend: true
-        backendAzureRmResourceGroupName: 'azactivedirectory-rg'
-        backendAzureRmResourceGroupLocation: 'Sweden Central'
-        backendAzureRmStorageAccountName: 'azadmysql2022'
-        backendAzureRmContainerName: 'tfstate'
-        backendAzureRmKey: 'dev.terraform.state'
-        allowTelemetryCollection: false
-    - task: TerraformCLI@0
-      displayName: Terraform Plan
-      inputs:
-        command: 'plan'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/service-principal'
-        environmentServiceName: 'terraform-aks-azurerm-svc-con'
-        commandOptions: '-out $(Pipeline.Workspace)/terraform-manifests-sp/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
-        allowTelemetryCollection: false
-    - task: TerraformCLI@0
-      displayName: Terraform Apply
-      inputs:
-        command: 'apply'
-        workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-sp'
-        environmentServiceName: 'terraform-aks-azurerm-svc-con'
-        commandOptions: '$(Pipeline.Workspace)/terraform-manifests-sp/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
-        allowTelemetryCollection: false
+  - deployment: DeployAKSServicePrincipal
+    displayName: DeployAKSServicePrincipal
+    pool:
+      vmImage: 'ubuntu-latest'
+    environment: $(TEST_ENVIRONMENT)
+    strategy:
+     runOnce:
+       deploy:
+        steps:
+        - task: TerraformCLI@0
+          displayName: Terraform Init
+          inputs:
+            command: 'init'
+            workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-sp'
+            backendType: 'azurerm'
+            backendServiceArm: 'terraform-aks-azurerm-svc-con'
+            ensureBackend: true
+            backendAzureRmResourceGroupName: 'azactivedirectory-rg'
+            backendAzureRmResourceGroupLocation: 'Sweden Central'
+            backendAzureRmStorageAccountName: 'azadmysql2022'
+            backendAzureRmContainerName: 'tfstate'
+            backendAzureRmKey: 'dev-$(TEST_ENVIRONMENT).state'
+            allowTelemetryCollection: false
+        - task: TerraformCLI@0
+          displayName: Terraform Plan
+          inputs:
+            command: 'plan'
+            workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-sp'
+            environmentServiceName: 'terraform-aks-azurerm-svc-con'
+            commandOptions: '-out $(Pipeline.Workspace)/terraform-manifests-sp/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
+            allowTelemetryCollection: false
+        - task: TerraformCLI@0
+          displayName: Terraform Apply
+          inputs:
+            command: 'apply'
+            workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-sp'
+            environmentServiceName: 'tf-aks-sp-svc-con'
+            commandOptions: '$(Pipeline.Workspace)/terraform-manifests-sp/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
+            allowTelemetryCollection: false
 
 # Deploy the stages to Test environment
 # Deployment to the Test AKS Cluster
@@ -155,10 +181,10 @@ stages:
               environmentServiceName: 'terraform-aks-azurerm-svc-con'
               commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
               allowTelemetryCollection: false
-          - task: TerraformCLI@0
-            inputs:
-              command: 'destroy'
-              workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
-              environmentServiceName: 'terraform-aks-azurerm-svc-con'
+#          - task: TerraformCLI@0
+#            inputs:
+#              command: 'destroy'
+#              workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
+#              environmentServiceName: 'terraform-aks-azurerm-svc-con'
 #              commandOptions: '-var ssh_pub_key=$(sshkey.secureFilePath) -var environment=$(TEST_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(TEST_ENVIRONMENT)-$(Build.BuildId).out'
-              allowTelemetryCollection: false
+#              allowTelemetryCollection: false
