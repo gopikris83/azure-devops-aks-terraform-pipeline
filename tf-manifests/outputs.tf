@@ -1,5 +1,5 @@
 output "location" {
-  value = azurerm_resource_group.aks_rg.location
+  value = data.azurerm_resource_group.aks_rg.location
 }
 
 output "varsions" {

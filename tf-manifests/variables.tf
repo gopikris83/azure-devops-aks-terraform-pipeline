@@ -4,7 +4,7 @@
 variable "resource_group_name" {
   type        = string
   description = "Azure Resource group name"
-  default     = "terraform-aks"
+  default     = "aks-project-cluster"
 }
 
 variable "environment" {
@@ -20,7 +20,7 @@ variable "location" {
 }
 
 variable "ssh_pub_key" {
-  #default     = "~/.ssh/aks-terraform-sshkeys/akspubkey.pub"
+  default     = "~/.ssh/aks-terraform-sshkeys/akspubkey.pub"
   description = "This variable defines the SSH Public Key for Linux k8s Worker nodes"
 }
 
@@ -40,4 +40,28 @@ variable "client_app_id" {
 
 variable "client_app_secret" {
   description = "The secret created for AKS server application"
+}
+
+variable "prefix" {
+  default = "aks-project-cluster"
+}
+
+variable "address_space" {
+  default = "10.101.0.0/16"
+}
+
+variable "server_app_id" {
+  description = "AKS Client App ID"
+}
+
+# variable "serverappid" {
+#   description = "AKS Server app id"
+# }
+
+# variable "serverappsecret" {
+#   description = "AKS Server Secret"
+# }
+
+variable "tenantid" {
+  description = "Azure Tenant id"
 }
