@@ -1,0 +1,87 @@
+{
+ "properties": {
+  "displayName": "Deny PrivateEndpoint PrivateLink Service Connections",
+  "policyType": "Custom",
+  "mode": "Indexed",
+  "description": "Deny private endpoints to resources outside of the aad tenant and subscription.",
+  "metadata": {
+   "category": "Network",
+   "version": "1.0.0",
+   "createdBy": "813bf4e7-e45c-4300-a81e-91b68790740c",
+   "createdOn": "2022-04-27T13:09:24.614201Z",
+   "updatedBy": null,
+   "updatedOn": null
+  },
+  "parameters": {
+   "effect": {
+    "type": "String",
+    "metadata": {
+     "description": "The effect determines what happens when the policy rule is evaluated to match",
+     "displayName": "Effect"
+    },
+    "allowedValues": [
+     "Audit",
+     "Deny",
+     "Disabled"
+    ],
+    "defaultValue": "Deny"
+   }
+  },
+  "policyRule": {
+   "if": {
+    "allOf": [
+     {
+      "equals": "Microsoft.Network/privateEndpoints",
+      "field": "type"
+     },
+     {
+      "anyOf": [
+       {
+        "count": {
+         "field": "Microsoft.Network/privateEndpoints/manualprivateLinkServiceConnections[*]",
+         "where": {
+          "allOf": [
+           {
+            "field": "Microsoft.Network/privateEndpoints/manualprivateLinkServiceConnections[*].privateLinkServiceId",
+            "notEquals": ""
+           },
+           {
+            "notEquals": "[subscription().subscriptionId]",
+            "value": "[split(concat(first(field('Microsoft.Network/privateEndpoints/manualprivateLinkServiceConnections[*].privateLinkServiceId')), '//'), '/')[2]]"
+           }
+          ]
+         }
+        },
+        "greaterOrEquals": 1
+       },
+       {
+        "count": {
+         "field": "Microsoft.Network/privateEndpoints/privateLinkServiceConnections[*]",
+         "where": {
+          "allOf": [
+           {
+            "field": "Microsoft.Network/privateEndpoints/privateLinkServiceConnections[*].privateLinkServiceId",
+            "notEquals": ""
+           },
+           {
+            "notEquals": "[subscription().subscriptionId]",
+            "value": "[split(concat(first(field('Microsoft.Network/privateEndpoints/privateLinkServiceConnections[*].privateLinkServiceId')), '//'), '/')[2]]"
+           }
+          ]
+         }
+        },
+        "greaterOrEquals": 1
+       }
+      ]
+     }
+    ]
+   },
+   "then": {
+    "effect": "[parameters('effect')]"
+   }
+  }
+ },
+ "id": "/providers/Microsoft.Management/managementGroups/cdxtest/providers/Microsoft.Authorization/policyDefinitions/Deny-PE-cross-tenant",
+ "type": "Microsoft.Authorization/policyDefinitions",
+ "name": "Deny-PE-cross-tenant"
+}
