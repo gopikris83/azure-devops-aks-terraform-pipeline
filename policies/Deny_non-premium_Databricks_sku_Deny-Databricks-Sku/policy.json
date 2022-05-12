@@ -1,0 +1,51 @@
+{
+ "properties": {
+  "displayName": "Deny non-premium Databricks sku",
+  "policyType": "Custom",
+  "mode": "Indexed",
+  "description": "Enforces the use of Premium Databricks workspaces to make sure appropriate security features are available including Databricks Access Controls, Credential Passthrough and SCIM provisioning for AAD.",
+  "metadata": {
+   "category": "Databricks",
+   "version": "1.0.0",
+   "createdBy": "813bf4e7-e45c-4300-a81e-91b68790740c",
+   "createdOn": "2022-04-27T13:12:29.7932004Z",
+   "updatedBy": null,
+   "updatedOn": null
+  },
+  "parameters": {
+   "effect": {
+    "type": "String",
+    "metadata": {
+     "description": "Enable or disable the execution of the policy",
+     "displayName": "Effect"
+    },
+    "allowedValues": [
+     "Audit",
+     "Disabled",
+     "Deny"
+    ],
+    "defaultValue": "Deny"
+   }
+  },
+  "policyRule": {
+   "if": {
+    "allOf": [
+     {
+      "equals": "Microsoft.Databricks/workspaces",
+      "field": "type"
+     },
+     {
+      "field": "Microsoft.DataBricks/workspaces/sku.name",
+      "notEquals": "premium"
+     }
+    ]
+   },
+   "then": {
+    "effect": "[parameters('effect')]"
+   }
+  }
+ },
+ "id": "/providers/Microsoft.Management/managementGroups/cdxtest/providers/Microsoft.Authorization/policyDefinitions/Deny-Databricks-Sku",
+ "type": "Microsoft.Authorization/policyDefinitions",
+ "name": "Deny-Databricks-Sku"
+}
