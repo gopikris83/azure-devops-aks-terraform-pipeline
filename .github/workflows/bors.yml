@@ -1,0 +1,26 @@
+name: Bors Runs
+
+on:
+  push:
+    branches:
+      - staging
+      - trying
+
+jobs:
+  test:
+    name: Bors
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Install nightly toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          components: rustfmt, clippy
+
+      - name: Run cargo check
+        uses: actions-rs/cargo@v1
+        with:
+          command: check
