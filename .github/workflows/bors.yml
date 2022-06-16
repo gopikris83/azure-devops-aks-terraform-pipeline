@@ -3,9 +3,7 @@ name: Bors Runs
 on:
   push:
     branches:
-      - staging
-      - trying
-      - feature
+      - main
 
 jobs:
   test:
