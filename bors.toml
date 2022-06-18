@@ -1,3 +1,4 @@
 status = ["Done",]
 use_squash_merge = true
+delete_merged_branches = true
 required_approvals = 0
