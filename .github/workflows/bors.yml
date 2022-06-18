@@ -1,12 +1,14 @@
 name: Bors
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     branches: []
   push:
     branches: [main]
   
-
 jobs:
   build:
     name: Terraform
