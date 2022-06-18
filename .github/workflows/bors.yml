@@ -19,7 +19,7 @@ jobs:
 
     done:
     name: Done
-    needs: [build]
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
       - name: Done
