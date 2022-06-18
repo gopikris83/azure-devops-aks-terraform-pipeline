@@ -1,3 +1,4 @@
-status = ["Bors"]
+status = ["Done"]
 delete_merged_branches = true
+use_squash_merge = true
 required_approvals = 1
