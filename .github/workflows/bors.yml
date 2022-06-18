@@ -1,7 +1,6 @@
 name: Bors Runs
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
