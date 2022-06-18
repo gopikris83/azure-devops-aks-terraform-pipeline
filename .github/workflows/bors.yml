@@ -1,13 +1,14 @@
-name: Bors Runs
+name: Bors
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
   pull_request:
 
 jobs:
-  test:
+  build:
     name: Terraform
     runs-on: ubuntu-latest
     steps:
@@ -16,9 +17,9 @@ jobs:
       - uses: hashicorp/setup-terraform@v2
       - run: terraform init
 
-    done:
+  done:
     name: Done
-    needs: [test]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - name: Done
